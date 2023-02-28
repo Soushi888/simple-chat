@@ -43,6 +43,20 @@ pub fn get_profile(original_profile_hash: ActionHash) -> ExternResult<Option<Rec
   get(latest_profile_hash, GetOptions::default())
 }
 
+#[hdk_extern]
+pub fn get_my_profile(_: ()) -> ExternResult<Option<Record>> {
+  let agent = agent_info()?.agent_initial_pubkey;
+  let links = get_links(agent, LinkTypes::CreatorToProfiles, None)?;
+  let latest_link = links
+    .into_iter()
+    .max_by(|link_a, link_b| link_a.timestamp.cmp(&link_b.timestamp));
+  let latest_profile_hash = match latest_link {
+    Some(link) => ActionHash::from(link.target.clone()),
+    None => return Ok(None),
+  };
+  get(latest_profile_hash, GetOptions::default())
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct UpdateProfileInput {
   pub original_profile_hash: ActionHash,

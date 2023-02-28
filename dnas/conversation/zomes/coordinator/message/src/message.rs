@@ -9,6 +9,13 @@ pub fn create_message(message: Message) -> ExternResult<Record> {
                 WasmErrorInner::Guest(String::from("Could not find the newly created Message"))
             ),
         )?;
+    let path = Path::from("all_messages");
+    create_link(
+        path.path_entry_hash()?,
+        message_hash.clone(),
+        LinkTypes::AllMessages,
+        (),
+    )?;
     Ok(record)
 }
 #[hdk_extern]

@@ -41,21 +41,27 @@ stores the messages
 
 - `profile` - validates the profile
     - canot be deleted
-    - `name` -> String - the user's name
-        - `name` must be a string
-        - `name` must be at least 3 characters long
-    - `avatar_url` -> String - the user's avatar url
-        - `avatar_url` must be a string
-        - `avatar_url` must be at least 3 characters long
+    - can be updated only by the author
+    - Only one profile per agent
+    - entry fields:
+      - `agent` -> AgentPubKey - the user's agent
+          - `agent` must be an agent
+      - `name` -> String - the user's name
+          - `name` must be a string
+          - `name` must be at least 3 characters long
+      - `avatar_url` -> String - the user's avatar url
+          - `avatar_url` must be a string
+          - `avatar_url` must be at least 3 characters long
 - `message` - validates the message
     - can be updated or deleted only by the author
-    - `content` - the message content
-        - `content` must be a string
-        - `content` must be at least 3 characters long
-    - `timestamp` - the message timestamp
-        - `timestamp` must be a timestamp
-    - `author` - the message author
-        - `author` must be an EntryHash of Profile
+    - entry fields:
+      - `content` - the message content
+          - `content` must be a string
+          - `content` must be at least 3 characters long
+      - `timestamp` - the message timestamp
+          - `timestamp` must be a timestamp
+      - `author` - the message author
+          - `author` must be an EntryHash of Profile
 
 ## Signals
 

@@ -1,3 +1,4 @@
+pub mod all_messages;
 pub mod message;
 use hdk::prelude::*;
 use message_integrity::*;

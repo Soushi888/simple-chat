@@ -1,5 +1,4 @@
 pub mod message;
-
 pub use message::*;
 use hdi::prelude::*;
 #[derive(Serialize, Deserialize)]
@@ -13,6 +12,7 @@ pub enum EntryTypes {
 #[hdk_link_types]
 pub enum LinkTypes {
     MessageUpdates,
+    AllMessages,
 }
 #[hdk_extern]
 pub fn genesis_self_check(
@@ -115,6 +115,14 @@ pub fn validate(op: Op) -> ExternResult<ValidateCallbackResult> {
                         tag,
                     )
                 }
+                LinkTypes::AllMessages => {
+                    validate_create_link_all_messages(
+                        action,
+                        base_address,
+                        target_address,
+                        tag,
+                    )
+                }
             }
         }
         OpType::RegisterDeleteLink {
@@ -128,6 +136,15 @@ pub fn validate(op: Op) -> ExternResult<ValidateCallbackResult> {
             match link_type {
                 LinkTypes::MessageUpdates => {
                     validate_delete_link_message_updates(
+                        action,
+                        original_action,
+                        base_address,
+                        target_address,
+                        tag,
+                    )
+                }
+                LinkTypes::AllMessages => {
+                    validate_delete_link_all_messages(
                         action,
                         original_action,
                         base_address,
@@ -280,6 +297,14 @@ pub fn validate(op: Op) -> ExternResult<ValidateCallbackResult> {
                                 tag,
                             )
                         }
+                        LinkTypes::AllMessages => {
+                            validate_create_link_all_messages(
+                                action,
+                                base_address,
+                                target_address,
+                                tag,
+                            )
+                        }
                     }
                 }
                 OpRecord::DeleteLink { original_action_hash, base_address, action } => {
@@ -307,6 +332,15 @@ pub fn validate(op: Op) -> ExternResult<ValidateCallbackResult> {
                     match link_type {
                         LinkTypes::MessageUpdates => {
                             validate_delete_link_message_updates(
+                                action,
+                                create_link.clone(),
+                                base_address,
+                                create_link.target_address,
+                                create_link.tag,
+                            )
+                        }
+                        LinkTypes::AllMessages => {
+                            validate_delete_link_all_messages(
                                 action,
                                 create_link.clone(),
                                 base_address,
