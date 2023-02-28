@@ -1,0 +1,28 @@
+---
+manifest_version: "1"
+name: conversation
+integrity:
+  network_seed: ~
+  properties: ~
+  origin_time: 1677555993222250
+  zomes:
+    - name: profile_integrity
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/profile_integrity.wasm"
+      dependencies: ~
+    - name: message_integrity
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/message_integrity.wasm"
+      dependencies: ~
+coordinator:
+  zomes:
+    - name: profile
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/profile.wasm"
+      dependencies:
+        - name: profile_integrity
+    - name: message
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/message.wasm"
+      dependencies:
+        - name: message_integrity

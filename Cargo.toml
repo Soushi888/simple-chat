@@ -1,0 +1,25 @@
+[profile.dev]
+opt-level = "z"
+
+[profile.release]
+opt-level = "z"
+
+[workspace]
+members = ["dnas/*/zomes/coordinator/*", "dnas/*/zomes/integrity/*"]
+
+[workspace.dependencies]
+hdi = "=0.2.1"
+hdk = "=0.1.1"
+serde = "1"
+
+[workspace.dependencies.message]
+path = "dnas/conversation/zomes/coordinator/message"
+
+[workspace.dependencies.message_integrity]
+path = "dnas/conversation/zomes/integrity/message"
+
+[workspace.dependencies.profile]
+path = "dnas/conversation/zomes/coordinator/profile"
+
+[workspace.dependencies.profile_integrity]
+path = "dnas/conversation/zomes/integrity/profile"
