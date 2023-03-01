@@ -66,3 +66,5 @@ stores the messages
 ## Signals
 
 - [ ] `message` - sends a signal when a message is created
+
+![image](Diagram.drawio.png)
