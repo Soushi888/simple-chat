@@ -3,6 +3,15 @@ use profile_integrity::*;
 
 #[hdk_extern]
 pub fn create_profile(profile: Profile) -> ExternResult<Record> {
+  let agent = profile.agent.clone();
+  let links = get_links(agent, LinkTypes::CreatorToProfiles, None)?;
+
+  if links.len() > 0 {
+    return Err(wasm_error!(
+      WasmErrorInner::Guest(String::from("Agent already has a profile"))
+    ));
+  }
+
   let profile_hash = create_entry(&EntryTypes::Profile(profile.clone()))?;
   create_link(
     profile.agent.clone(),

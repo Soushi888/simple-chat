@@ -8,7 +8,6 @@ import '@material/mwc-snackbar';
 import type { Snackbar } from '@material/mwc-snackbar';
 
 import '@material/mwc-textarea';
-import '@vaadin/date-time-picker/theme/material/vaadin-date-time-picker.js';
 let client: AppAgentClient = (getContext(clientContext) as any).getClient();
 
 const dispatch = createEventDispatcher();
@@ -33,10 +32,12 @@ onMount(() => {
 async function createMessage() {  
   const messageEntry: Message = { 
     content: content!,
-    timestamp: timestamp!,
+    timestamp,
     author: author!,
   };
-  
+
+	console.log("messageEntry", messageEntry);
+
   try {
     const record: Record = await client.callZome({
       cap_secret: null,
@@ -62,11 +63,6 @@ async function createMessage() {
   <div style="margin-bottom: 16px">
     <mwc-textarea outlined label="Content" value={ content } on:input={e => { content = e.target.value;} } required></mwc-textarea>          
   </div>
-            
-  <div style="margin-bottom: 16px">
-    <vaadin-date-time-picker label="Timestamp" value={new Date(timestamp / 1000).toISOString()} on:change={e => { timestamp = new Date(e.target.value).valueOf() * 1000;} } required></vaadin-date-time-picker>          
-  </div>
-            
 
   <mwc-button 
     raised

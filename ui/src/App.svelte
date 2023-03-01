@@ -1,21 +1,19 @@
 <script lang="ts">
 	import {onMount, setContext} from 'svelte';
-	import type {ActionHash, AgentPubKey, AppAgentClient, Record} from '@holochain/client';
+	import type {ActionHash, AgentPubKey, AppAgentClient, EntryHash, Record} from '@holochain/client';
 	import {AppAgentWebsocket} from '@holochain/client';
 	import '@material/mwc-circular-progress';
 
 	import {clientContext} from './contexts';
 	import CreateProfile from "./conversation/profile/CreateProfile.svelte";
 	import ProfileDetail from "./conversation/profile/ProfileDetail.svelte";
-	import type {Profile} from "./conversation/profile/types";
 	import CreateMessage from "./conversation/message/CreateMessage.svelte";
 	import AllMessages from "./conversation/message/AllMessages.svelte";
-	import {decode} from "@msgpack/msgpack";
 
 	let client: AppAgentClient | undefined;
 	let loading = true;
-	let createdProfileHash: ActionHash | undefined;
-	let myProfile: Profile | undefined;
+	let myProfile: Record | undefined;
+	let profileActionHash: ActionHash | undefined;
 
 	$: client, loading;
 
@@ -23,6 +21,9 @@
 		// We pass '' as url because it will dynamically be replaced in launcher environments
 		client = await AppAgentWebsocket.connect('', 'simple-chat');
 		myProfile = await getProfile();
+		profileActionHash = myProfile?.signed_action.hashed.hash;
+			profileActionHash = myProfile?.signed_action.hashed.hash;
+
 		loading = false;
 	});
 
@@ -30,7 +31,7 @@
 		getClient: () => client,
 	});
 
-	const getProfile = async (): Promise<Profile | undefined> => {
+	const getProfile = async (): Promise<Record | undefined> => {
 		if (client === undefined) {
 			return undefined;
 		}
@@ -43,9 +44,7 @@
 				fn_name: 'get_my_profile',
 				payload: null,
 			});
-			if (record) {
-				return decode((record.entry as any).Present.entry) as Profile;
-			}
+			if (record) return record;
 		} catch (e) {
 			console.error(e);
 		}
@@ -64,18 +63,19 @@
       <h1>Hello World !</h1>
       <p>This is a simple chat happ</p>
 
-      {#if myProfile}
+      {#if profileActionHash}
         <div>
           <h2>Profile created</h2>
           <p>Now you can start chatting with other agents</p>
         </div>
-        <ProfileDetail profileHash={myProfile.agent}/>
-        <CreateMessage author={myProfile.agent}/>
+        <ProfileDetail profileHash={profileActionHash}/>
+        <CreateMessage author={profileActionHash}/>
         <AllMessages/>
       {:else }
         <div>
           <h2>Profile not created</h2>
-          <CreateProfile agent={client.myPubKey} on:profile-created={async () => myProfile = await getProfile()}/>
+          <CreateProfile agent={client.myPubKey}
+                         on:profile-created={async (evt) => profileActionHash = evt.detail.profileHash}/>
         </div>
       {/if}
     </div>

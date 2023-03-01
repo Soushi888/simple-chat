@@ -30,19 +30,19 @@ stores the messages
 ### Collections
 
 - `profiles`
-    - `get_all_profiles` - returns all the profiles
-    - `get_profile_by_agent` - returns the profile of a given agent
+    - [x] `get_all_profiles` - returns all the profiles
+    - [x] `get_profile_by_agent` - returns the profile of a given agent
 
 - `messages`
-    - `get_all_messages` - returns all the messages
-    - `get_messages_by_author` - returns all the messages by a given author
+    - [x] `get_all_messages` - returns all the messages
+    - [ ] `get_messages_by_author` - returns all the messages by a given author
 
 ## Validation
 
 - `profile` - validates the profile
-    - canot be deleted
-    - can be updated only by the author
-    - Only one profile per agent
+    - [x] canot be deleted
+    - [ ] can be updated only by the author
+    - [x] Only one profile per agent
     - entry fields:
       - `agent` -> AgentPubKey - the user's agent
           - `agent` must be an agent
@@ -53,7 +53,7 @@ stores the messages
           - `avatar_url` must be a string
           - `avatar_url` must be at least 3 characters long
 - `message` - validates the message
-    - can be updated or deleted only by the author
+    - [ ] can be updated or deleted only by the author
     - entry fields:
       - `content` - the message content
           - `content` must be a string
@@ -65,4 +65,4 @@ stores the messages
 
 ## Signals
 
-- `message` - sends a signal when a message is created
+- [ ] `message` - sends a signal when a message is created
